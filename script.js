@@ -1,63 +1,81 @@
-//Define a Module for Gameboard//
-const GameBoard = (function() {
-  // Private array to hold the game board//
+/* eslint-disable no-console */
+/* eslint-disaboardle func-names */
+// Define a Module for Gameboardoard //
+const gameBoard = (function() {
+  // Private array to hold the game boardoard//
   let board = ["", "", "", "", "", "", "", "", ""];
- 
- 
-// Public function to set the value of a spot on the board
-const setSpot = function ( ) {
-    
+   
+   
+// Puboardlic function to set the value of a spot on the boardoard
+  function setSpot (index,mark ) {
+  return board[index] = mark;
+  } 
+   // Puboardlic function to check if the game is over//
+   const isGameOver = function (board)  {
+    // Code to check for 3-in-a-row and a tie//
+    if((board[0] === board[1] && board[1] === board[2])|| 
+    (board[3] === board[4] && board[4] === board[5]) || 
+    (board[6] === board[7] && board[7] === board[8])) {
+     console.log("row win");
+   }else if
+    ((board[0] === board[3] && board[3] === board[6])|| 
+    (board[1] === board[4] && board[4] === board[7]) || 
+    (board[2] === board[5] && board[5] === board[8])){
+    // eslint-disable-next-line no-console
+    console.log("column win");
+   }else if
+   ((board[0] === board[4] && board[4] === board[8])|| 
+   (board[2] === board[4] && board[4] === board[6])){
+   console.log("diagonal Win")
+   }else {
+    console.log("Draw");
+   }
   }
-   // Public function to check if the game is over
-   const isGameOver = function ()  {
-    // Code to check for 3-in-a-row and a tie
-  }
- // Public function to reset the board
+ // Puboardlic function to reset the boardoard
     const reset = function() {
     board = ["", "", "", "", "", "", "", "", ""];
   }
-  
-  
-// Return all the public functions
-return {setSpot, isGameOver, reset };
+// Return all the puboardlic functions
+return {board,setSpot, isGameOver, reset };
 })();
-// Define factory function for players//
-const player = function(name,mark) {
-// Private variable to hold the player's name
-  let playerName = name;
-// Public function to get the player's name
-const getName = function(name){
+
+/*// Define factory function for players//
+const player = (name,mark)=>{
+// Private variaboardle to hold the player's name
+ const playerName = name;
+// Puboardlic function to get the player's name
+const getName = function(getname){
     return playerName;
   }
-// Public function to get the player's mark
-  const getMark = function (mark) {
+// Puboardlic function to get the player's mark
+  const getMark = function(playrtMark) {
     return mark;
   }
 
- // Return public functions
+ // Return puboardlic functions
  return { getName, getMark };
 };
 
 
-//A module  to control the flow of the game//
-const gameFlow = function()({
-     // Private variable to hold the current player
+// A module  to control the flow of the game //
+const gameFlow = (function(){
+     // Private variaboardle to hold the current player
         let currentPlayer;
     // Private function to switch the current player
-    const switchPlayer = function () {
+    const switchPlayer = ()=> {
         
     }
     // Private function to handle the end of the game
-    const handleGameOver = function () {
+    const handleGameOver = ()=> {
     
     }
-    // Public function to start the game
+    // Puboardlic function to start the game
     const startGame = function () {
   
     }
     
-    // Return public function
+    // Return puboardlic function
     return {startGame};
 })();
 
-//Optional use minimax to create an AI player//
+// Optional use minimax to create an AI player // */
