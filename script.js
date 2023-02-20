@@ -50,15 +50,24 @@ const gameBoard = (function () {
 console.log(gameBoard.board);
 console.log(gameBoard.isGameOver());
 
-/*// Define factory function for players//
-function player(symbol) {
+// Define factory function for players//
+const player = (function (mark) {
   let player1;
   let player2;
 
-  return { player1, player2 };
-}
+  return function (mark) {
+    if (!player1) {
+      player1 = mark;
+    } else if (player1 && !player2) {
+      player2 = mark;
+    }
 
-console.log(gameBoard.board);*/
+    console.log(player1, player2);
+    return { player1, player2 };
+  };
+})();
+
+console.log(gameBoard.board);
 /*
 // A module  to control the flow of the game //
 const gameFlow = (function () {
@@ -118,6 +127,7 @@ const displayController = (function () {
   for (let i = 0; i < cells.length; i++) {
     cells[i].addEventListener('click', () => {
       // Do something for cell click
+      console.log(cells[i]);
     });
   }
 })();
