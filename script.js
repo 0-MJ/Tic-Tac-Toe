@@ -50,17 +50,16 @@ const gameBoard = (function () {
 console.log(gameBoard.board);
 console.log(gameBoard.isGameOver());
 
-// Define factory function for players//
-const player = function (name, mark) {
-  return { name, mark };
-};
+/*// Define factory function for players//
+function player(symbol) {
+  let player1;
+  let player2;
 
-const player1 = player('player1', 'x');
-const player2 = player('player2', 'O');
+  return { player1, player2 };
+}
 
-gameBoard.setSpot(0, player1.mark);
-console.log(gameBoard.board);
-
+console.log(gameBoard.board);*/
+/*
 // A module  to control the flow of the game //
 const gameFlow = (function () {
   // Private variaboardle to hold the current player
@@ -88,10 +87,39 @@ const gameFlow = (function () {
   // Return puboardlic function
   return { startGame };
 })();
+*/
 
-// Display controller for UI I/P//
-const gameController = (function(){
-
-})
+const displayController = (function () {
+  // Get all elements with class name "cell" //
+  const cells = document.getElementsByClassName('cell');
+  // Get all buttons //
+  const buttons = document.querySelectorAll('#x, #o, #reset');
+  // Loop through the buttons and add click event listeners //
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', () => {
+      if (buttons[i].id === 'x') {
+        console.log('X is Tapped');
+        // Calling the player function //
+        player('x');
+        buttons[i].classList.add('button-clicked');
+        // Do something for X button click
+      } else if (buttons[i].id === 'o') {
+        console.log('O is Tapped');
+        player('o');
+        buttons[i].classList.add('button-clicked');
+        // Do something for O button click
+      } else if (buttons[i].id === 'reset') {
+        console.log('Reset is Tapped');
+        // Do something for Reset button click
+      }
+    });
+  }
+  // loop through the cells and display the chosen symbol //
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].addEventListener('click', () => {
+      // Do something for cell click
+    });
+  }
+})();
 
 // Optional use minimax to create an AI player // */
