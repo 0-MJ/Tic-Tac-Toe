@@ -1,6 +1,7 @@
-/* eslint-disable no-console */
-/* eslint-disaboardle func-names */
+/* eslint-disable no-plusplus */
+/* eslint-disable no-undef */
 // Define a Module for Gameboardoard //
+/*
 const gameBoard = (function () {
   // Private array to hold the game board//
   let board = ['', '', '', '', '', '', '', '', ''];
@@ -49,54 +50,44 @@ const gameBoard = (function () {
 })();
 console.log(gameBoard.board);
 console.log(gameBoard.isGameOver());
-
+*/
 // Define factory function for players//
-const player = (function (mark) {
+const player = (function () {
   let player1;
   let player2;
-
-  return function (mark) {
-    if (!player1) {
-      player1 = mark;
-    } else if (player1 && !player2) {
-      player2 = mark;
+  function playerMark(mark) {
+    if (!this.player1 && !this.player2) {
+      this.player1 = mark;
+    } else if (this.player1 && !this.player2) {
+      this.player2 = mark;
     }
-
-    console.log(player1, player2);
-    return { player1, player2 };
-  };
+  }
+  return { player1, player2, playerMark };
 })();
 
-console.log(gameBoard.board);
-/*
 // A module  to control the flow of the game //
 const gameFlow = (function () {
   // Private variaboardle to hold the current player
-  let currentPlayer = player1;
+  let currentPlayer = player.player1;
   // Private function to switch the current player
   const switchPlayer = function () {
-    if (currentPlayer === player1.mark) {
-      currentPlayer = player2.mark;
-    } else {
-      currentPlayer = player1.mark;
-    }
+    currentPlayer =
+      currentPlayer === player.player1 ? player.player2 : player.player1;
+    console.log(`Current player: ${currentPlayer}`);
   };
-
+  /*
   const handleGameOver = function () {
-    if (gameBoard.isGameOver()) {
-      gameBoard.reset();
+    
     }
-  };
 
   const startGame = function () {
     // Public function to start the game //
-    switchPlayer();
+    
   };
-
+  */
   // Return puboardlic function
-  return { startGame };
+  return { switchPlayer };
 })();
-*/
 
 const displayController = (function () {
   // Get all elements with class name "cell" //
@@ -107,14 +98,14 @@ const displayController = (function () {
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', () => {
       if (buttons[i].id === 'x') {
-        console.log('X is Tapped');
         // Calling the player function //
-        player('x');
+        player.playerMark('x');
+        gameFlow.switchPlayer();
         buttons[i].classList.add('button-clicked');
         // Do something for X button click
       } else if (buttons[i].id === 'o') {
-        console.log('O is Tapped');
-        player('o');
+        player.playerMark('o');
+        gameFlow.switchPlayer();
         buttons[i].classList.add('button-clicked');
         // Do something for O button click
       } else if (buttons[i].id === 'reset') {
