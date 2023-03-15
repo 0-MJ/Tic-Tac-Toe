@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-undef */
 // Define a Module for Gameboardoard //
-/*
+
 const gameBoard = (function () {
   // Private array to hold the game board//
   let board = ['', '', '', '', '', '', '', '', ''];
@@ -9,6 +9,7 @@ const gameBoard = (function () {
   // Puboardlic function to set the value of a spot on the boardoard //
   function setSpot(index, mark) {
     board[index] = mark;
+    console.log(`Board state: ${board}`);
     return mark;
   }
   // Pulic function to check if the game is over//
@@ -45,12 +46,17 @@ const gameBoard = (function () {
   const reset = function () {
     board = ['', '', '', '', '', '', '', '', ''];
   };
+
+  function renderBoard() {
+    const cells = document.getElementsByClassName('cell');
+    for (let i = 0; i < cells.length; i++) {
+      cells[i].textContent = board[i];
+    }
+  }
   // Return all the puboardlic functions
-  return { board, setSpot, isGameOver, reset };
+  return { board, setSpot, isGameOver, reset, renderBoard };
 })();
-console.log(gameBoard.board);
-console.log(gameBoard.isGameOver());
-*/
+
 // Define factory function for players//
 const player = (function () {
   let player1;
@@ -68,12 +74,16 @@ const player = (function () {
 // A module  to control the flow of the game //
 const gameFlow = (function () {
   // Private variaboardle to hold the current player
+
   let currentPlayer = player.player1;
   // Private function to switch the current player
   const switchPlayer = function () {
     currentPlayer =
       currentPlayer === player.player1 ? player.player2 : player.player1;
-    console.log(`Current player: ${currentPlayer}`);
+    /*console.log(`player1${player.player1}`);
+    console.log(`player2${player.player2}`);
+    console.log(`currentPLayer${currentPlayer}`);*/
+    return currentPlayer;
   };
   /*
   const handleGameOver = function () {
@@ -86,7 +96,7 @@ const gameFlow = (function () {
   };
   */
   // Return puboardlic function
-  return { switchPlayer };
+  return { currentPlayer, switchPlayer };
 })();
 
 const displayController = (function () {
@@ -100,12 +110,10 @@ const displayController = (function () {
       if (buttons[i].id === 'x') {
         // Calling the player function //
         player.playerMark('x');
-        gameFlow.switchPlayer();
         buttons[i].classList.add('button-clicked');
         // Do something for X button click
       } else if (buttons[i].id === 'o') {
         player.playerMark('o');
-        gameFlow.switchPlayer();
         buttons[i].classList.add('button-clicked');
         // Do something for O button click
       } else if (buttons[i].id === 'reset') {
@@ -115,10 +123,13 @@ const displayController = (function () {
     });
   }
   // loop through the cells and display the chosen symbol //
+
   for (let i = 0; i < cells.length; i++) {
     cells[i].addEventListener('click', () => {
       // Do something for cell click
-      console.log(cells[i]);
+      const mark = gameFlow.switchPlayer();
+      gameBoard.setSpot(i, mark);
+      gameBoard.renderBoard();
     });
   }
 })();
