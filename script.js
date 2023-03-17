@@ -13,34 +13,27 @@ const gameBoard = (function () {
     return mark;
   }
   // Pulic function to check if the game is over//
-  const isGameOver = function () {
-    let result;
+  const checkWinner = function () {
+    let winningCombination = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8], // rows
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8], // columns
+    [0, 4, 8], [2, 4, 6]] // diagonals]
+    let winningSymbol;
     // Code to check for 3-in-a-row and a tie//
-    if (
-      (board[0] === board[1] && board[1] === board[2]) ||
-      (board[3] === board[4] && board[4] === board[5]) ||
-      (board[6] === board[7] && board[7] === board[8])
-    ) {
-      result = 'row win';
-      console.log('row win');
-    } else if (
-      (board[0] === board[3] && board[3] === board[6]) ||
-      (board[1] === board[4] && board[4] === board[7]) ||
-      (board[2] === board[5] && board[5] === board[8])
-    ) {
-      console.log('column win');
-      result = 'column win';
-    } else if (
-      (board[0] === board[4] && board[4] === board[8]) ||
-      (board[2] === board[4] && board[4] === board[6])
-    ) {
-      console.log('diagonal Win');
-      result = 'diagonal win';
-    } else {
-      console.log('Draw');
-      result = 'Draw';
+    for (let [a, b, c] of winningCombination) {
+      if (!board[a] || !board[b] || !board[c]) {
+        continue;
+      } else if (board[a] === board[b] && board[b] === board[c]) {
+        winningSymbol = board[a]
+        console.log(winningSymbol)
+        break;
+      }
     }
-    return result;
+    return winningSymbol
   };
   // Puboardlic function to reset the boardoard
   const reset = function () {
@@ -54,7 +47,7 @@ const gameBoard = (function () {
     }
   }
   // Return all the puboardlic functions
-  return { board, setSpot, isGameOver, reset, renderBoard };
+  return { board, setSpot, checkWinner, reset, renderBoard };
 })();
 
 // Define factory function for players//
@@ -80,23 +73,26 @@ const gameFlow = (function () {
   const switchPlayer = function () {
     currentPlayer =
       currentPlayer === player.player1 ? player.player2 : player.player1;
-    /*console.log(`player1${player.player1}`);
+    /* console.log(`player1${player.player1}`);
     console.log(`player2${player.player2}`);
-    console.log(`currentPLayer${currentPlayer}`);*/
+    console.log(`currentPLayer${currentPlayer}`); */
     return currentPlayer;
   };
-  /*
   const handleGameOver = function () {
-    
+    if (gameBoard.checkWinner === player.player1) {
+      console.log("player1 won")
+    }else if (gameBoard.checkWinner === player.player2) {
+      console.log("player2 won")
     }
-
+  };
+  /*
   const startGame = function () {
     // Public function to start the game //
     
   };
   */
   // Return puboardlic function
-  return { currentPlayer, switchPlayer };
+  return { currentPlayer, switchPlayer, handleGameOver };
 })();
 
 const displayController = (function () {
@@ -130,6 +126,8 @@ const displayController = (function () {
       const mark = gameFlow.switchPlayer();
       gameBoard.setSpot(i, mark);
       gameBoard.renderBoard();
+      gameBoard.checkWinner();
+      gameFlow.handleGameOver();
     });
   }
 })();
