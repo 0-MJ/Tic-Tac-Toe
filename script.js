@@ -5,7 +5,7 @@
 const gameBoard = (function () {
   // Private array to hold the game board//
   let board = ['', '', '', '', '', '', '', '', ''];
-
+  let winningSymbol;
   // Puboardlic function to set the value of a spot on the boardoard //
   function setSpot(index, mark) {
     board[index] = mark;
@@ -14,26 +14,26 @@ const gameBoard = (function () {
   }
   // Pulic function to check if the game is over//
   const checkWinner = function () {
-    let winningCombination = [
+    const winningCombination = [
       [0, 1, 2],
       [3, 4, 5],
       [6, 7, 8], // rows
       [0, 3, 6],
       [1, 4, 7],
       [2, 5, 8], // columns
-    [0, 4, 8], [2, 4, 6]] // diagonals]
-    let winningSymbol;
+      [0, 4, 8],
+      [2, 4, 6], // diagonals
+    ];
+
     // Code to check for 3-in-a-row and a tie//
-    for (let [a, b, c] of winningCombination) {
-      if (!board[a] || !board[b] || !board[c]) {
-        continue;
-      } else if (board[a] === board[b] && board[b] === board[c]) {
-        winningSymbol = board[a]
-        console.log(winningSymbol)
+    for (const [a, b, c] of winningCombination) {
+      if (board[a] === board[b] && board[b] === board[c]) {
+        this.winningSymbol = board[a];
+        console.log(this.winningSymbol);
         break;
       }
     }
-    return winningSymbol
+    return winningSymbol;
   };
   // Puboardlic function to reset the boardoard
   const reset = function () {
@@ -47,7 +47,7 @@ const gameBoard = (function () {
     }
   }
   // Return all the puboardlic functions
-  return { board, setSpot, checkWinner, reset, renderBoard };
+  return { setSpot, checkWinner, reset, renderBoard, winningSymbol };
 })();
 
 // Define factory function for players//
@@ -79,20 +79,23 @@ const gameFlow = (function () {
     return currentPlayer;
   };
   const handleGameOver = function () {
-    if (gameBoard.checkWinner === player.player1) {
-      console.log("player1 won")
-    }else if (gameBoard.checkWinner === player.player2) {
-      console.log("player2 won")
+    if (gameBoard.winningSymbol === player.player1) {
+      console.log('player1 won');
+    } else if (gameBoard.winningSymbol === player.player2) {
+      console.log('player2 won');
     }
   };
-  /*
-  const startGame = function () {
+
+  const runGame = function () {
     // Public function to start the game //
-    
+
+    gameBoard.renderBoard();
+    gameBoard.checkWinner();
+    handleGameOver();
   };
-  */
+
   // Return puboardlic function
-  return { currentPlayer, switchPlayer, handleGameOver };
+  return { switchPlayer, runGame };
 })();
 
 const displayController = (function () {
@@ -115,6 +118,8 @@ const displayController = (function () {
       } else if (buttons[i].id === 'reset') {
         console.log('Reset is Tapped');
         // Do something for Reset button click
+        gameBoard.reset();
+        gameBoard.renderBoard();
       }
     });
   }
@@ -125,9 +130,7 @@ const displayController = (function () {
       // Do something for cell click
       const mark = gameFlow.switchPlayer();
       gameBoard.setSpot(i, mark);
-      gameBoard.renderBoard();
-      gameBoard.checkWinner();
-      gameFlow.handleGameOver();
+      gameFlow.runGame();
     });
   }
 })();
