@@ -8,10 +8,15 @@ const gameBoard = (function () {
   let winningSymbol;
   // Puboardlic function to set the value of a spot on the boardoard //
   function setSpot(index, mark) {
-    board[index] = mark;
-    console.log(`Board state: ${board}`);
-    return mark;
+    if (board[index]) {
+      console.log(`spot is already marked`);
+    } else {
+      board[index] = mark;
+      console.log(`Board state: ${board}`);
+      return mark;
+    }
   }
+
   // Pulic function to check if the game is over//
   const checkWinner = function () {
     const winningCombination = [
@@ -47,7 +52,7 @@ const gameBoard = (function () {
     }
   }
   // Return all the puboardlic functions
-  return { setSpot, checkWinner, reset, renderBoard, winningSymbol };
+  return { board, setSpot, checkWinner, reset, renderBoard, winningSymbol };
 })();
 
 // Define factory function for players//
@@ -117,9 +122,15 @@ const displayController = (function () {
         // Do something for O button click
       } else if (buttons[i].id === 'reset') {
         console.log('Reset is Tapped');
+        // Remove the 'button-clicked' class from the 'x' and 'o' buttons
+        document.getElementById('x').classList.remove('button-clicked');
+        document.getElementById('o').classList.remove('button-clicked');
         // Do something for Reset button click
+        player.player1 = null;
+        player.player2 = null;
         gameBoard.reset();
         gameBoard.renderBoard();
+        gameBoard.winningSymbol = null;
       }
     });
   }
@@ -128,9 +139,11 @@ const displayController = (function () {
   for (let i = 0; i < cells.length; i++) {
     cells[i].addEventListener('click', () => {
       // Do something for cell click
+      if (player.player1 && player.player2&& !gameBoard.winningSymbol) {
       const mark = gameFlow.switchPlayer();
-      gameBoard.setSpot(i, mark);
-      gameFlow.runGame();
+          gameBoard.setSpot(i, mark);
+          gameFlow.runGame();
+      }
     });
   }
 })();
