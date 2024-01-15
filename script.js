@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-undef */
 // Define a Module for Gameboardoard //
-/*
+
 const gameBoard = (function () {
   // Array to hold the game board//
   let board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
@@ -52,8 +52,7 @@ const gameBoard = (function () {
   return { board, setSpot, checkWinner, reset, winningSymbol };
 })();
 
-console.log(gameBoard.setSpot(5,'o'));
-*/
+//console.log(gameBoard.setSpot(5,Game.switchPlayer()));//
 
 // Player object to store player mark //
 let playerObject = {
@@ -68,25 +67,35 @@ let playerObject = {
 
 // Temporary code //
 // Prompt the user for player marks
-var player1Mark = prompt("Enter mark for Player 1:");
-var player2Mark = prompt("Enter mark for Player 2:");
+var player1Mark = "x"
+var player2Mark = "o";
 
 // Set players in the game object
-game.setPlayers(player1Mark, player2Mark);
+playerObject.setPlayers(player1Mark, player2Mark);
 
 // Access player variables globally
-console.log("Player 1 mark:", game.player1);
-console.log("Player 2 mark:", game.player2);
-
+console.log(`player1-${playerObject.player1}`);
+console.log(`player2-${playerObject.player2}`);
 
 // A module  to control the flow of the game //
 const Game = (function () {
- 
-})();
+  let currentPlayer = playerObject.player1;
 
-/*
+  function switchPlayer() {
+    currentPlayer = currentPlayer === playerObject.player1 ? playerObject.player2 : playerObject.player1;
+    return currentPlayer;
+  }
+// Calling the set spot function //
+
+  return {switchPlayer};
+})();
+console.log(`Current Player: ${Game.switchPlayer()}`);
+gameBoard.setSpot(1,Game.switchPlayer())
+gameBoard.setSpot(5,Game.switchPlayer())
+console.log(`Current Player: ${Game.switchPlayer()}`);
+
+
 // Display module
 const displayController = (function () {
 
 })();
-*/
