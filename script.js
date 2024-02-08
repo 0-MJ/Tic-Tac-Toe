@@ -60,22 +60,19 @@ let playerObject = {
   player2: '',
 
   setPlayers: function(mark1, mark2) {
+    if (this.player1 === ''){
       this.player1 = mark1;
       this.player2 = mark2;
+    } else {
+      console.log('Players have already been set. To reset, press the reset button.');
+    }
+     
+      
+      console.log(`player1 chose ${this.player1}`);
+      console.log(`player2 chose ${this.player2}`);
   }
+    
 };
-
-// Temporary code //
-// Prompt the user for player marks
-var player1Mark = "x"
-var player2Mark = "o";
-
-// Set players in the game object
-playerObject.setPlayers(player1Mark, player2Mark);
-
-// Access player variables globally
-console.log(`player1-${playerObject.player1}`);
-console.log(`player2-${playerObject.player2}`);
 
 // A module  to control the flow of the game //
 const Game = (function () {
@@ -89,13 +86,55 @@ const Game = (function () {
 
   return {switchPlayer};
 })();
-console.log(`Current Player: ${Game.switchPlayer()}`);
-gameBoard.setSpot(1,Game.switchPlayer())
-gameBoard.setSpot(5,Game.switchPlayer())
-console.log(`Current Player: ${Game.switchPlayer()}`);
-
 
 // Display module
 const displayController = (function () {
+  let x = document.getElementById('x');
+  let o = document.getElementById('o');
+  let reset = document.getElementById('reset');
+  let cells = document.querySelectorAll('.cell');
+  let player1Div = document.getElementById('player1');
+  let player2Div = document.getElementById('player2');
+
+  x.addEventListener('click', function() {
+      // Your X button functionality here
+      console.log('X button clicked');
+      x.classList.add('button-tapped');
+      o.classList.add('button-tapped');
+      playerObject.setPlayers("x","o");
+      updatePlayerDisplay();
+  });
+
+  o.addEventListener('click', function() {
+      // Your O button functionality here
+      console.log('O button clicked');
+      x.classList.add('button-tapped');
+      o.classList.add('button-tapped');
+      playerObject.setPlayers("o","x");
+      updatePlayerDisplay();
+  });
+
+  reset.addEventListener('click', function() {
+      // Your Reset button functionality here
+      console.log('Reset button clicked');
+      // adding class for css functionality //
+      x.classList.remove('button-tapped');
+      o.classList.remove('button-tapped');
+      // reseting player choices //
+      playerObject.player1 = '';
+      playerObject.player2 = '';
+      updatePlayerDisplay();
+  });
+
+  cells.forEach(function(cell, index) {
+      cell.addEventListener('click', function() {
+      console.log(Game.switchPlayer)
+    });
+  }); 
+  
+  function updatePlayerDisplay() {
+    player1Div.textContent = `Player 1: ${playerObject.player1}`;
+    player2Div.textContent = `Player 2: ${playerObject.player2}`;
+}
 
 })();
