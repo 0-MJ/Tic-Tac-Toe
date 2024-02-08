@@ -82,8 +82,6 @@ const Game = (function () {
     currentPlayer = currentPlayer === playerObject.player1 ? playerObject.player2 : playerObject.player1;
     return currentPlayer;
   }
-// Calling the set spot function //
-
   return {switchPlayer};
 })();
 
@@ -128,7 +126,10 @@ const displayController = (function () {
 
   cells.forEach(function(cell, index) {
       cell.addEventListener('click', function() {
-      console.log(Game.switchPlayer)
+      
+      // Update the content of the clicked cell with the new player value
+      cell.textContent = Game.switchPlayer();
+      cell.classList.add('cell-content');
     });
   }); 
   
