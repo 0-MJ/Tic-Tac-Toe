@@ -1,58 +1,28 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable no-undef */
-// Define a Module for Gameboardoard //
 
 const gameBoard = (function () {
   // Array to hold the game board//
   let board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
-  
-  let winningSymbol;
+ 
   
   // function to set the value of a spot on the boardoardzz //
-  function setSpot(index, mark) {
-    if (board[index] !== ' ') {
-      console.log(`spot is already marked`);
-    } else {
+  let setSpot = (index, mark) => {
+    if (board[index] === ' ') {
       board[index] = mark;
       console.log(board);
-      return mark;
+    } else if (board[index] === mark) {
+      console.log(`spot is already marked`);
+      console.log(board);
     }
   }
 
-  // function to check if the game is over//
-  const checkWinner = function () {
-    const winningCombination = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8], // rows
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8], // columns
-      [0, 4, 8],
-      [2, 4, 6], // diagonals
-    ];
-
-    // Code to check for 3-in-a-row and a tie//
-    for (const [a, b, c] of winningCombination) {
-      if (board[a] === board[b] && board[b] === board[c]) {
-        this.winningSymbol = board[a];
-        console.log(this.winningSymbol);
-        break;
-      }
-    }
-    return winningSymbol;
-  };
-  
-  // Function to reset the boardoard
-  const reset = function () {
-    board = ['', '', '', '', '', '', '', '', ''];
-  };
-
-  // Return all the puboardlic functions
-  return { board, setSpot, checkWinner, reset, winningSymbol };
+  // Function to reset the game board
+  let resetBoard = ( ) => {
+    return board  = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+  }
+  // Return all the functions
+  return { board, setSpot,resetBoard};
 })();
 
-//console.log(gameBoard.setSpot(5,Game.switchPlayer()));//
 
 // Player object to store player mark //
 let playerObject = {
@@ -75,18 +45,47 @@ let playerObject = {
 };
 
 // A module  to control the flow of the game //
-const Game = (function () {
+const gameController = (() => {
   let currentPlayer = playerObject.player1;
+  
 
-  function switchPlayer() {
+  let switchPlayer=()=> {
     currentPlayer = currentPlayer === playerObject.player1 ? playerObject.player2 : playerObject.player1;
     return currentPlayer;
   }
-  return {switchPlayer};
+  // function to check if the game is over//
+  const checkWinner = () => {
+    const winningCombination = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8], // rows
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8], // columns
+      [0, 4, 8],
+      [2, 4, 6], // diagonals
+    ];
+
+    // Check for a winning combination
+    for (const [a, b, c] of winningCombination) {
+      if (gameBoard.board[a] === gameBoard.board[b] && gameBoard.board[b] === gameBoard.board[c] && gameBoard.board[a] !== ' ') {
+      this.winningSymbol = gameBoard.board[a];
+      console.log(`${this.winningSymbol} wins!`);
+      return winningSymbol; // Return the winning symbol and exit the function
+      }
+    }
+
+  // Check for a draw only if no winning combination is reached
+    if (gameBoard.board.every(cell => cell !== ' ')) {
+    console.log("It's a Draw");
+    return null;
+    }
+  }
+  return {checkWinner, switchPlayer};  
 })();
 
 // Display module
-const displayController = (function () {
+const displayController = (() => {
   let x = document.getElementById('x');
   let o = document.getElementById('o');
   let reset = document.getElementById('reset');
@@ -112,30 +111,40 @@ const displayController = (function () {
       updatePlayerDisplay();
   });
 
-  reset.addEventListener('click', function() {
-      // Your Reset button functionality here
-      console.log('Reset button clicked');
-      // adding class for css functionality //
-      x.classList.remove('button-tapped');
-      o.classList.remove('button-tapped');
-      // reseting player choices //
-      playerObject.player1 = '';
-      playerObject.player2 = '';
-      updatePlayerDisplay();
+  cells.forEach(function(cell, index) {
+    cell.addEventListener('click', function() {
+      gameBoard.setSpot(index,gameController.switchPlayer())
+      // Update the content of the clicked cell with the new player value
+      cell.textContent = gameBoard.board[index];
+      cell.classList.add('cell-content');
+      gameController.checkWinner();
+    });
   });
 
-  cells.forEach(function(cell, index) {
-      cell.addEventListener('click', function() {
-      
-      // Update the content of the clicked cell with the new player value
-      cell.textContent = Game.switchPlayer();
-      cell.classList.add('cell-content');
+  reset.addEventListener('click', function() {
+    // Call the resetBoard function
+     gameBoard.board=gameBoard.resetBoard();
+    // Update the content of all cells based on the game board values
+    cells.forEach(function(cell, index) {
+      cell.textContent = gameBoard.board[index];
+      cell.classList.remove('cell-content');
+      console.log(gameBoard.board);
     });
-  }); 
-  
-  function updatePlayerDisplay() {
+
+    // Your Reset button functionality here
+    console.log('Reset button clicked');
+    // adding class for css functionality //
+    x.classList.remove('button-tapped');
+    o.classList.remove('button-tapped');
+    // reseting player choices //
+    playerObject.player1 = '';
+    playerObject.player2 = '';
+    updatePlayerDisplay();
+  });
+
+  let updatePlayerDisplay = () => {
     player1Div.textContent = `Player 1: ${playerObject.player1}`;
     player2Div.textContent = `Player 2: ${playerObject.player2}`;
-}
+  }
 
 })();
