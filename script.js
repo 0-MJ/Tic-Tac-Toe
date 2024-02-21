@@ -47,7 +47,7 @@ let playerObject = {
 // A module  to control the flow of the game //
 const gameController = (() => {
   let currentPlayer = playerObject.player1;
-  
+  let winningSymbol;
 
   let switchPlayer=()=> {
     currentPlayer = currentPlayer === playerObject.player1 ? playerObject.player2 : playerObject.player1;
@@ -81,7 +81,7 @@ const gameController = (() => {
     return null;
     }
   }
-  return {checkWinner, switchPlayer};  
+  return {checkWinner, switchPlayer,winningSymbol};  
 })();
 
 // Display module
@@ -92,6 +92,7 @@ const displayController = (() => {
   let cells = document.querySelectorAll('.cell');
   let player1Div = document.getElementById('player1');
   let player2Div = document.getElementById('player2');
+  let playersSet = false;
 
   x.addEventListener('click', function() {
       // Your X button functionality here
@@ -100,6 +101,7 @@ const displayController = (() => {
       o.classList.add('button-tapped');
       playerObject.setPlayers("x","o");
       updatePlayerDisplay();
+      playersSet = true;
   });
 
   o.addEventListener('click', function() {
@@ -109,15 +111,20 @@ const displayController = (() => {
       o.classList.add('button-tapped');
       playerObject.setPlayers("o","x");
       updatePlayerDisplay();
+      playersSet = true;
   });
 
   cells.forEach(function(cell, index) {
     cell.addEventListener('click', function() {
-      gameBoard.setSpot(index,gameController.switchPlayer())
-      // Update the content of the clicked cell with the new player value
-      cell.textContent = gameBoard.board[index];
-      cell.classList.add('cell-content');
-      gameController.checkWinner();
+      if (playersSet) {
+          gameBoard.setSpot(index,gameController.switchPlayer())
+          // Update the content of the clicked cell with the new player value
+          cell.textContent = gameBoard.board[index];
+          cell.classList.add('cell-content');
+          gameController.checkWinner();
+      } else {
+        console.log('Please select X and O players first');
+     }
     });
   });
 
@@ -129,6 +136,7 @@ const displayController = (() => {
       cell.textContent = gameBoard.board[index];
       cell.classList.remove('cell-content');
       console.log(gameBoard.board);
+      playersSet = false;
     });
 
     // Your Reset button functionality here
