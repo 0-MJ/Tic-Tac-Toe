@@ -47,7 +47,7 @@ let playerObject = {
 // A module  to control the flow of the game //
 const gameController = (() => {
   let currentPlayer = playerObject.player1;
-  let winningSymbol;
+  let winningSymbol =null;
 
   let switchPlayer=()=> {
     currentPlayer = currentPlayer === playerObject.player1 ? playerObject.player2 : playerObject.player1;
@@ -69,8 +69,7 @@ const gameController = (() => {
     // Check for a winning combination
     for (const [a, b, c] of winningCombination) {
       if (gameBoard.board[a] === gameBoard.board[b] && gameBoard.board[b] === gameBoard.board[c] && gameBoard.board[a] !== ' ') {
-      this.winningSymbol = gameBoard.board[a];
-      console.log(`${this.winningSymbol} wins!`);
+      winningSymbol = gameBoard.board[a];
       return winningSymbol; // Return the winning symbol and exit the function
       }
     }
@@ -93,6 +92,7 @@ const displayController = (() => {
   let player1Div = document.getElementById('player1');
   let player2Div = document.getElementById('player2');
   let playersSet = false;
+  
 
   x.addEventListener('click', function() {
       // Your X button functionality here
@@ -116,16 +116,18 @@ const displayController = (() => {
 
   cells.forEach(function(cell, index) {
     cell.addEventListener('click', function() {
-      if (playersSet) {
+      if (playersSet && !gameController.checkWinner()) {
           gameBoard.setSpot(index,gameController.switchPlayer())
           // Update the content of the clicked cell with the new player value
           cell.textContent = gameBoard.board[index];
           cell.classList.add('cell-content');
           gameController.checkWinner();
+          console.log(`${gameController.checkWinner()} wins!`);
+
       } else {
-        console.log('Please select X and O players first');
+        console.log('GameOver');
      }
-    });
+    })
   });
 
   reset.addEventListener('click', function() {
