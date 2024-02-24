@@ -67,11 +67,6 @@ const gameController = (() => {
       return winningSymbol; // Return the winning symbol and exit the function
       }
     }
-
-  // Check for a draw only if no winning combination is reached
-    if (gameBoard.board.every(cell => cell !== ' ')) {
-    return null;
-    }
   }
   return {checkWinner, switchPlayer};  
 })();
@@ -119,6 +114,8 @@ const displayController = (() => {
         // Check the winner condition and update the winner message
         if (gameController.checkWinner()) {
           winnerMessage.textContent = `${gameController.checkWinner()} wins!`;
+       } else if (gameBoard.board.every(cell => cell !== ' ')) {
+        winnerMessage.textContent = `It's a Draw`;
        }
       }
     })
