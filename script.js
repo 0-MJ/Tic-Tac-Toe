@@ -8,10 +8,8 @@ const gameBoard = (function () {
   let setSpot = (index, mark) => {
     if (board[index] === ' ') {
       board[index] = mark;
-      console.log(board);
     } else if (board[index] === mark) {
-      console.log(`spot is already marked`);
-      console.log(board);
+      return;
     }
   }
 
@@ -33,13 +31,7 @@ let playerObject = {
     if (this.player1 === ''){
       this.player1 = mark1;
       this.player2 = mark2;
-    } else {
-      console.log('Players have already been set. To reset, press the reset button.');
     }
-     
-      
-      console.log(`player1 chose ${this.player1}`);
-      console.log(`player2 chose ${this.player2}`);
   }
     
 };
@@ -48,6 +40,7 @@ let playerObject = {
 const gameController = (() => {
   let currentPlayer = playerObject.player1;
   let winningSymbol =null;
+  let winningSequence;
 
   let switchPlayer=()=> {
     currentPlayer = currentPlayer === playerObject.player1 ? playerObject.player2 : playerObject.player1;
@@ -70,17 +63,17 @@ const gameController = (() => {
     for (const [a, b, c] of winningCombination) {
       if (gameBoard.board[a] === gameBoard.board[b] && gameBoard.board[b] === gameBoard.board[c] && gameBoard.board[a] !== ' ') {
       winningSymbol = gameBoard.board[a];
+      winningSequence = [a,b,c];
       return winningSymbol; // Return the winning symbol and exit the function
       }
     }
 
   // Check for a draw only if no winning combination is reached
     if (gameBoard.board.every(cell => cell !== ' ')) {
-    console.log("It's a Draw");
     return null;
     }
   }
-  return {checkWinner, switchPlayer,winningSymbol};  
+  return {checkWinner, switchPlayer};  
 })();
 
 // Display module
@@ -91,12 +84,14 @@ const displayController = (() => {
   let cells = document.querySelectorAll('.cell');
   let player1Div = document.getElementById('player1');
   let player2Div = document.getElementById('player2');
+  let winner = document.getElementById('winnerMessage')
   let playersSet = false;
   
 
+
   x.addEventListener('click', function() {
       // Your X button functionality here
-      console.log('X button clicked');
+   
       x.classList.add('button-tapped');
       o.classList.add('button-tapped');
       playerObject.setPlayers("x","o");
@@ -106,7 +101,6 @@ const displayController = (() => {
 
   o.addEventListener('click', function() {
       // Your O button functionality here
-      console.log('O button clicked');
       x.classList.add('button-tapped');
       o.classList.add('button-tapped');
       playerObject.setPlayers("o","x");
@@ -122,13 +116,14 @@ const displayController = (() => {
           cell.textContent = gameBoard.board[index];
           cell.classList.add('cell-content');
           gameController.checkWinner();
-          console.log(`${gameController.checkWinner()} wins!`);
-
-      } else {
-        console.log('GameOver');
-     }
+        // Check the winner condition and update the winner message
+        if (gameController.checkWinner()) {
+          winnerMessage.textContent = `${gameController.checkWinner()} wins!`;
+       }
+      }
     })
   });
+
 
   reset.addEventListener('click', function() {
     // Call the resetBoard function
@@ -137,12 +132,10 @@ const displayController = (() => {
     cells.forEach(function(cell, index) {
       cell.textContent = gameBoard.board[index];
       cell.classList.remove('cell-content');
-      console.log(gameBoard.board);
       playersSet = false;
     });
 
     // Your Reset button functionality here
-    console.log('Reset button clicked');
     // adding class for css functionality //
     x.classList.remove('button-tapped');
     o.classList.remove('button-tapped');
@@ -150,6 +143,7 @@ const displayController = (() => {
     playerObject.player1 = '';
     playerObject.player2 = '';
     updatePlayerDisplay();
+    winnerMessage.textContent = " ";
   });
 
   let updatePlayerDisplay = () => {

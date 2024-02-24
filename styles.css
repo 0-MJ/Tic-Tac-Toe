@@ -85,5 +85,10 @@ font-size: 20px;
   font-weight: bold;
   text-align: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
 
+#winnerMessage {
+  color: white;
+  font-size: 50px;
+  text-align: center;
 }
